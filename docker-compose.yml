@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+  db:
+    image: mariadb
+    restart: always
+    ports:
+      - "8081:3306"
+    volumes:
+       - ./data/db:/var/lib/mysql
+    env_file:
+      - ./config/mysql.env
+  wp:
+    image: wordpress
+    volumes:
+      - ./data/wordpress:/var/www/html
+      - ./src/htaccess.txt:/var/www/html/.htaccess
+      - ./src/wp-content:/var/www/html/wp-content:rw 
+    ports:
+      - "8080:80"
+    links:
+      - db:mysql
+    env_file:
+      - ./config/wordpress.env
